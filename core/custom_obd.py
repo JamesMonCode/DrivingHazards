@@ -1,0 +1,1 @@
+# define a class that performs all the functions you need to the obd... like querying specific commands

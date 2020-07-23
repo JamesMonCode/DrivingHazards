@@ -1,0 +1,1 @@
+add openface code here as well as a python file that performs all the low level functions (writing files to storage, calling openface with them, getting and returning results, etc.)
