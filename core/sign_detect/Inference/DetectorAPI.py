@@ -4,62 +4,30 @@ import sys
 import argparse
 from ..Training.src.keras_yolo3.yolo import YOLO, detect_video
 
-
 from PIL import Image
 from timeit import default_timer as timer
 
 from ..Utils.utils import load_extractor_model, load_features, parse_input, detect_object
-
-#import utils
+from ..Utils.Get_File_Paths import GetFileList
 
 import pandas as pd
 import numpy as np
 import random
 import test
 
-from ..Utils.Get_File_Paths import GetFileList
-
-
-
-# os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-
-# returns the directory level that can access whatever file we need
+# eturns the n-th parent dicrectory of the current working directory
 def get_parent_dir(n=1):
-    """ returns the n-th parent dicrectory of the current
-    working directory """
+
     current_path = os.path.dirname(os.path.abspath(__file__))
     for k in range(n):
         current_path = os.path.dirname(current_path)
     return current_path
 
-# src_path = os.path.join(get_parent_dir(1), "Training", "src")
-# utils_path = os.path.join(get_parent_dir(1), "Utils")
-
-# sys.path.append(src_path)
-# sys.path.append(utils_path)
-
-# # Set up folder names for default values
-# data_folder = os.path.join(get_parent_dir(n=1), "Data")
-
-# image_folder = os.path.join(data_folder, "Source_Images")
-
-# image_test_folder = os.path.join(image_folder, "Test_Images")
-
-# detection_results_folder = os.path.join(image_folder, "Test_Image_Detection_Results")
-# detection_results_file = os.path.join(detection_results_folder, "Detection_Results.csv")
-
-# model_folder = os.path.join(data_folder, "Model_Weights")
-
-# model_weights = os.path.join(model_folder, "trained_weights_final.h5")
-# model_classes = os.path.join(model_folder, "data_classes.txt")
-
-# anchors_path = os.path.join(src_path, "keras_yolo3", "model_data", "yolo_anchors.txt")
-
 class MySignDetector:
+
     def __init__(self, min_threshold=0.1,stopBool=False):
         print('shit')
-               # Delete all default flags
-        os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3" # i didnt know where to put this line so here it is
+        os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
         self.min_threshold = min_threshold
         self.FLAGS = None
         self.parser = argparse.ArgumentParser(argument_default=argparse.SUPPRESS)
@@ -187,18 +155,13 @@ class MySignDetector:
         else:
             self.input_paths = GetFileList(self.FLAGS.input_path)
 
-        # Split images and videos
         self.img_endings = (".jpg", ".jpg", ".png")
-        #vid_endings = (".mp4", ".mpeg", ".mpg", ".avi")
 
         self.input_image_paths = []
-        #input_video_paths = []
 
         for item in self.input_paths:
             if item.endswith(self.img_endings):
                 self.input_image_paths.append(item)
-            #elif item.endswith(vid_endings):
-                #input_video_paths.append(item)
 
         self.output_path = self.FLAGS.output
         if not os.path.exists(self.output_path):
@@ -229,32 +192,18 @@ class MySignDetector:
                 "y_size",
             ]
         )
-
         self.class_file = open(self.FLAGS.classes_path, "r")
         self.input_labels = [line.rstrip("\n")  for line in self.class_file.readlines()]
         print("Found {} input labels: {} ...".format(len(self.input_labels), self.input_labels))
 
 
     def checkForSigns(self, img):
-        # run the image through the model, call self.generate()?
-        # self.generate() returns boxes, scores, classes variables
-        
+    
         pred, img_array = detect_object(self.yolo, img, True)
-        
-        # print(pred)
-        # print(img_array)
-        
+        # returns true if there is at least 1 stop sign in the picture
         for item in pred:
             if item[5] > self.min_threshold:
-                return True
-            
+                return True   
         return False
 
         print(self.yolo.boxes) 
-        #i think this is wrong
-        # check if there are more than 0 boxes found (boxes var from the yolo class)
-        # assig/n boolean to dict based on number of boxes
-        # return and close session 
-        
-        #return if boxes > 0
-        #sign key, true false???

@@ -25,8 +25,6 @@ class DrivingHazardDetector:
 
     def detect_gaze(self):
 
-
-        
         pass
 
 
