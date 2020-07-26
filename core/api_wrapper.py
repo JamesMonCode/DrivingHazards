@@ -41,8 +41,3 @@ class DrivingHazardDetector:
         return speed, rpm, throttle
 
     # etc etx
-
-
-from deepface import DeepFace
-demography = DeepFace.analyze("/Users/kevin/Google Drive/seniorHeadshot.jpg", actions=['emotion'])
-print("Emotion: ", demography["dominant_emotion"])
