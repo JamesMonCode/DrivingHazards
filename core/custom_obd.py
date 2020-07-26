@@ -1,5 +1,6 @@
 import obd
 import time
+import pyttsx3
 
 obd.logger.setLevel(obd.logging.DEBUG)
 
@@ -27,3 +28,13 @@ class MyOBD:
         }
 
         return self.connection.query(ver_to_cmd[ver], force=True)
+
+    def play_audio(self, alert):
+        engine = pyttsx3.init()
+        if alert == :
+            engine.say('you are dumb') 
+        elif alern == :
+            engine.say('option2')
+
+        engine.runAndWait()
+        # and more
