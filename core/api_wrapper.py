@@ -16,16 +16,23 @@ class DrivingHazardDetector:
     def capture_images(self):
         ret1, frame1 = self.webcams[0].read()
         ret2, frame2 = self.webcams[1].read() 
-        assert ret1 and ret2, 'camera capture failed'
+        assert ret1 and ret2, 'Camera capture failed!'
 
         return frame1, frame2
 
     def detect_signs(self, img):
         return self.sign_detector.checkForSigns(img)
+
+    def detect_gaze(self):
+
+
         
-        # we need a yolo model to call
-        # we need to get the output
-        # eq: what do you need as output?
+        pass
+
+
+        # return looked_left, looked_right
+        # create an openface class gaze object thing
+        # eq: what do you need as output? a dictionary!
         # output format: a dict where key = sign type, val = bool -> yes/no based on presence
 
     def pull_OBD(self):
@@ -36,3 +43,8 @@ class DrivingHazardDetector:
         return speed, rpm, throttle
 
     # etc etx
+
+
+from deepface import DeepFace
+demography = DeepFace.analyze("/Users/kevin/Google Drive/seniorHeadshot.jpg", actions=['emotion'])
+print("Emotion: ", demography["dominant_emotion"])
