@@ -2,7 +2,6 @@ from .custom_obd import MyOBD
 import cv2
 from .sign_detect.Inference.DetectorAPI import MySignDetector
 
-# from sign_detect import something
 # from openface import something
 # define a class that you can instantiate in main.py that contains all calls to your components
 
@@ -22,6 +21,8 @@ class DrivingHazardDetector:
 
     def detect_signs(self, img):
         return self.sign_detector.checkForSigns(img)
+
+
 
     def detect_gaze(self):
 

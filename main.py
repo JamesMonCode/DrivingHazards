@@ -8,10 +8,14 @@ api = DrivingHazardDetector()
 start = -1
 looked_left, looked_right = False, False
 min_speed = 1e18
-time_start_speed = -1 # we kinda dumb
-start_speed = 0
-
+time_prev_speed = -1 # we kinda dumb
+prev_speed = 0
+can_alarm = True
 acceleration = 0 # kyles dumb
+STOPPING_SPEED = 0.5
+MAX_ACCEL = 0.00248548
+WARNING_ACCEL = 0.00193255
+MAX_DECEL = -0.002299
 
 def main():
     
@@ -28,9 +32,6 @@ def main():
 
         print(stop_bool)
 
-        # warn about stop sign
-
-
         # detect LR-gaze
 
         left, right = api.detect_gaze()
@@ -44,18 +45,25 @@ def main():
         min_speed = min(min_speed, speed)
 
         # check for stop sign failure
+        # check if it's been a while since the same stop sign
 
         fail_stop_sign = [False, False, False]
         if timer() - start > 5:
             fail_stop_sign[0] = not looked_left
             fail_stop_sign[1] = not looked_right
-            fail_stop_sign[2] = min_speed > 0.5
+            fail_stop_sign[2] = min_speed > STOPPING_SPEED
+
+            can_alarm = True
 
             start = -1
             looked_left, looked_right = False, False
 
+        # warn about stop sign ahead
+        if can_alarm and stop_bool:
+            api.play_audio("Stop Sign identified ahead.")
+            can_alarm = False
+
         # report error if applicable
-        
         if True in fail_stop_sign: #maybe while stop_bool or less than 5 sec? or when your speed starts to increase and you dont see it
             stop_rules = ['look left', 'look right', 'fully stop']
             message = ''
@@ -68,24 +76,23 @@ def main():
 
         #detect if their driving is too jerky
 
-        speed_diff = speed - start_speed
-        time_diff = timer() - time_start_speed
+        speed_diff = speed - prev_speed
+        #converting from mph to mps
+        speed_diff = speed_diff / 3600
+        time_diff = timer() - time_prev_speed
         acceleration = speed_diff / time_diff
         
-        if acceleration > #TOO FAST:
+        if acceleration > WARNING_ACCEL: #hard accelerating
             #sound warning about too fast xd
             api.play_audio('you are accelerating too fast weeeeee woooooo weeeeeee woooooo xdxdxdxdxdxd omegalul')
-        elif: acceleration < -0.00229907
+        elif: acceleration < -0.002299 #mps^2 #hard braking
             #sound warning braking too fast
-            api.play_audio('you are gonna damage your brake pads')
+            api.play_audio('you are gonna damage your brake pad and rotor components.')
 
         #reset timer and speeds 
 
-        time_start_speed = timer() # where's eddie's model @ tho :(
-        start_speed = speed
-        #braking too fast
-        
-        #accelerating too fast
+        time_prev_speed = timer()
+        prev_speed = speed
 
         # detect emotion from face cam
 
