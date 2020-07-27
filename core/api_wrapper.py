@@ -5,7 +5,6 @@ from .sign_detect.Inference.DetectorAPI import MySignDetector
 # from openface import something
 # define a class that you can instantiate in main.py that contains all calls to your components
 
-
 class DrivingHazardDetector:
     def __init__(self):
         self.webcams = [cv2.VideoCapture(1), cv2.VideoCapture(2)]

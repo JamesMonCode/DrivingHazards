@@ -39,9 +39,11 @@ def main():
 
         # pull OBD data
         speed, rpm, throttle = api.pull_OBD()
+
+        print("this is the kph version" + speed)
         speed = speed.value.to("mph")
 
-        print(speed)
+        print("this is the mph version" + speed)
         min_speed = min(min_speed, speed)
 
         # check for stop sign failure
@@ -82,10 +84,12 @@ def main():
         time_diff = timer() - time_prev_speed
         acceleration = speed_diff / time_diff
         
-        if acceleration > WARNING_ACCEL: #hard accelerating
+        if acceleration > MAX_ACCEL: #hard accelerating
             #sound warning about too fast xd
+            api.play_audio('damaging stuff ur car is so sad that ur hurting them')
+        elif acceleration > WARNING_ACCEL:
             api.play_audio('you are accelerating too fast weeeeee woooooo weeeeeee woooooo xdxdxdxdxdxd omegalul')
-        elif: acceleration < -0.002299 #mps^2 #hard braking
+        elif acceleration < MAX_DECEL: #mps^2 #hard braking
             #sound warning braking too fast
             api.play_audio('you are gonna damage your brake pad and rotor components.')
 
@@ -100,7 +104,7 @@ def main():
 
         # sound alarm if they're drowsy
 
-        #sound alarm if they're angr 
+        # sound alarm if they're angry 
 
 
         # break
